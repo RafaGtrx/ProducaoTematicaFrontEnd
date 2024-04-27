@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  width: 400px;
+}
+
+.login-card {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.login-button,
+.signup-button {
+  width: calc(50% - 5px); /* Calcula 50% do espaço menos 5px para o espaçamento */
+}
+.signup-button {
+  background-color: rgba(252, 143, 1, 1);
+  color: white;
+}

@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="login-container">
+    <mat-card class="login-card">
+      <mat-card-header>
+        <mat-card-title>Login</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form #loginForm="ngForm" (ngSubmit)="login()">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Digite o seu email" type="email" name="email" [(ngModel)]="email" required>
+            <mat-error *ngIf="email && !isEmailValid(email)">Email inválido</mat-error>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Digite a sua senha" type="password" name="senha" [(ngModel)]="senha" required>
+          </mat-form-field>
+          <div class="button-container">
+            <button mat-raised-button class="signup-button" id="signup-button" routerLink="/cadastro">
+              Cadastrar
+              <mat-icon>person</mat-icon>
+            </button>
+            <button mat-raised-button [color]="loginForm.valid ? 'primary' : ''" class="login-button" [disabled]="!loginForm.valid || !isEmailValid(email)">
+              Entrar
+              <mat-icon *ngIf="!loginForm.valid">lock</mat-icon>
+              <mat-icon *ngIf="loginForm.valid">lock_open</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
