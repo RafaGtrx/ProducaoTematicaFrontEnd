@@ -1,0 +1,25 @@
+<div ngif="comentarioExcluir">
+    <mat-card class="custom-card">
+      <h1>Deseja Confirmar a Exclusão ?</h1>
+      <div *ngFor="let item of comentarioExcluir">
+        <mat-form-field class="comment-field" style="width: 400px">
+            <textarea 
+              matInput
+              placeholder="Comentário a ser deletado"
+              [value]="item?.comentario" 
+              rows="3"
+              red
+              disabled=""
+            ></textarea>
+          </mat-form-field>
+        <div class="modal-buttons">
+          <div class="button-container">
+            <button class="buttonEditModal" mat-raised-button color="warn" (click)="DeleteComment()">
+              Confirmar Exclusão
+            </button>
+            <button class="buttonEditModal" mat-raised-button (click)="Cancelar()">Voltar</button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>

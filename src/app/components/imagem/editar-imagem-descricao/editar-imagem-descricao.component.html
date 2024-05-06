@@ -1,0 +1,22 @@
+<div *ngFor="let item of imagemEditar">
+    <mat-card class="custom-card">
+      <h1>Edite a Legenda</h1>
+      <div class="image-container">
+        <img [src]="item.imagePath" alt="Imagem" class="image" />
+      </div>
+      <div class="modal-buttons">
+        <mat-form-field class="comment-field" style="width: 400px">
+          <textarea #textAreaNovo
+            matInput
+            placeholder="Editar a Legenda..."
+            [value]="item?.descricaoImagem" 
+            rows="3"
+          ></textarea>
+        </mat-form-field>
+        <div class="button-container">
+          <button class="buttonEditModal editButton" mat-raised-button color="warn" (click)="EditarImagemDescricao()">Editar</button>
+          <button class="buttonEditModal" mat-raised-button (click)="Cancelar()">Voltar</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>

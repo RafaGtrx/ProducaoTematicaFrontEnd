@@ -6,69 +6,88 @@ import { environment } from 'src/environments/environment.prod';
 import { map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar'; // Importe MatSnackBar e suas posições
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.ApiUrl}`; 
+  private apiUrl = `${environment.ApiUrl}`;
+  private tokenKey = 'token';
+  idKey = 'id';
 
-  // Defina as posições horizontal e vertical
-  horizontalPosition: MatSnackBarHorizontalPosition = 'end'; // 'start' | 'center' | 'end' | 'left' | 'right'
-  verticalPosition: MatSnackBarVerticalPosition = 'top';  // Alterado para 'bottom' para posicionar o snack-bar na parte inferior
-
-  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   login(email: string, senha: string): Observable<boolean> {
-    console.log('caiuAqui')
-    return this.http.post<any>(`${this.apiUrl}/Auth/Login`, { email, senha }).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.dados); // Define o token a partir da propriedade 'dados'
-        if (response.sucesso) {
-          this.showSuccessMessage('Login bem-sucedido: ' + response.mensagem);
-          this.router.navigate(['/login']); // Redireciona o usuário para outra rota
-        } else {
-          this.showErrorMessage('Erro ao fazer login: ' + response.mensagem);
-        }
-      }),
-      map(response => response.sucesso), // Retorna true se o login foi bem-sucedido
-      catchError(error => {
-        this.showErrorMessage('Erro ao fazer login: ' + error);
-        return of(false); // Retorna false se o login falhou
-      })
-    );
+    return this.http
+      .post<any>(`${this.apiUrl}/Auth/Login`, { email, senha })
+      .pipe(
+        tap((response) => {
+          if (response.sucesso) {
+            setTimeout(() => {
+              this.spinner.hide();
+              this.toastr.error(response.mensagem)
+            }, 1000);
+            const token = response.dados.token;
+            // Decodificar o token JWT para acessar os dados
+            const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+
+            // Extrair o ID do usuário do payload decodificado
+            const userId = tokenPayload.Id;
+
+            localStorage.setItem(this.tokenKey, token);
+            localStorage.setItem(this.idKey, userId);
+
+            this.toastr.success(response.mensagem)
+            this.router.navigate(['/home']);
+          } else {
+            setTimeout(() => {
+              this.spinner.hide();
+              this.toastr.error(response.mensagem)
+            }, 1000);
+          }
+        }),
+        map((response) => response.sucesso),
+        catchError((error) => {
+          setTimeout(() => {
+            this.spinner.hide();
+            this.toastr.error('Erro ao fazer login: ' + error.error?.mensagem);
+          }, 1000);
+          
+          return of(false);
+        })
+      );
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']); // Redireciona para a rota de login
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.idKey);
+    this.toastr.success('Usuario Deslogado com sucesso')
+
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem(this.tokenKey);
   }
 
   isLoggedIn(): boolean {
-    return this.getToken() !== null;
+    return (
+      !!localStorage.getItem(this.tokenKey) &&
+      !!localStorage.getItem(this.idKey)
+    );
   }
 
-  private showSuccessMessage(message: string): void {
-    this.snackBar.open(message, 'Fechar', {
-      duration: 4000, // Duração da mensagem (em milissegundos)
-      panelClass: ['snackbar-success'], // Estilos personalizados para mensagem de sucesso
-      horizontalPosition: this.horizontalPosition, // Posição horizontal
-      verticalPosition: this.verticalPosition // Posição vertical
-    });
+  getIdUsuarioLogado(): number {
+    const idUsuarioLogado = localStorage.getItem(this.idKey);
+    return idUsuarioLogado ? parseInt(idUsuarioLogado) : 0;
   }
 
-  private showErrorMessage(message: string): void {
-    this.snackBar.open(message, 'Fechar', {
-      duration: 4000, // Duração da mensagem (em milissegundos)
-      panelClass: ['snackbar-error'], // Estilos personalizados para mensagem de erro
-      horizontalPosition: this.horizontalPosition, // Posição horizontal
-      verticalPosition: this.verticalPosition // Posição vertical
-    });
-  }
 }

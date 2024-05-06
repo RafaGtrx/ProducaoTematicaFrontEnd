@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -11,9 +12,10 @@ export class LoginComponent {
   email: string = '';
   senha: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,private spinner: NgxSpinnerService,) {}
 
   login() {
+    this.spinner.show();
     this.authService.login(this.email, this.senha).subscribe()
   }
 

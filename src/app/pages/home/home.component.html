@@ -1,0 +1,136 @@
+<div class="title-container">
+  <h1>Feed de Imagens</h1>
+  <button class="btnPostarImagem" (click)="OpenDialogUploadImage()" mat-raised-button color="primary"> <mat-icon class="material-symbols-outlined">
+    add_a_photo
+    </mat-icon>
+  Postar Foto
+  </button>
+</div>
+
+<div class="container">
+  <mat-card *ngFor="let imagem of imagens" class="card">
+
+    <div class="post-info">
+      <span><mat-icon class="avatar">account_circle</mat-icon></span>
+      <span class="nomeUsuarioTop">{{ imagem.NomeUsuario }}</span>
+    </div>
+
+    <div class="more_vert">
+      <button
+        mat-button
+        [mat-menu-trigger-for]="menu"
+        fxHide="false"
+        fxHide.gt-sm
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <mat-menu x-position="before" #menu="matMenu">
+        <button
+          mat-menu-item
+          (click)="OpenDialogEditImageDescription(imagem.Id, imagem.IdUsuario)"
+        >
+          <mat-icon class="iconedit">rate_review</mat-icon>
+          Editar
+        </button>
+        <button
+          mat-menu-item
+          (click)="OpenDialogDeleteImage(imagem.Id, imagem.IdUsuario)"
+        >
+          <mat-icon color="warn">delete</mat-icon>
+          Excluir
+        </button>
+      </mat-menu>
+    </div>
+
+    <img [src]="imagem.ImagePath" alt="Imagem" class="image" />
+
+    <ng-container *ngIf="!imagem.showFullDescription">
+      <div class="teste1">
+       
+        <span class="nomeUsuario">{{ imagem.NomeUsuario }}: </span>
+        <span>
+          {{
+            imagem.DescricaoImagem.length > 35
+              ? imagem.DescricaoImagem.slice(0, 35) + "..."
+              : imagem.DescricaoImagem
+          }}
+        </span>
+      </div>
+
+      <button
+        mat-button
+        *ngIf="imagem.DescricaoImagem.length > 35"
+        (click)="showFullDescription(imagem)"
+      >
+        Ver mais
+      </button>
+    </ng-container>
+    <ng-container *ngIf="imagem.showFullDescription">
+      <div class="teste2">
+        <span class="nomeUsuarioIf">{{ imagem.NomeUsuario }}:</span
+        ><span> {{ imagem.DescricaoImagem }} </span>
+      </div>
+    </ng-container>
+
+    <span
+      [ngClass]="{
+        'tempoPublicacao-adjusted': imagem.DescricaoImagem.length < 35
+      }"
+      class="tempoPublicacao"
+    >
+      <ng-container *ngIf="imagem.showFullDescription; else notFullDescription">
+        Há {{ imagem.formattedCreationDate }}.
+      </ng-container>
+      <ng-template #notFullDescription>
+        Há {{ imagem.formattedCreationDate }}.
+      </ng-template>
+    </span>
+    
+    <!-- Exibe os comentários da imagem atual -->
+    <div style="text-align: left;">
+      <div *ngIf="!imagem.ExisteComentario">
+        <button color="primary" mat-button (click)="OpenDialogPostComments(imagem.Id)">Comentar 
+          <mat-icon>add_comment</mat-icon>
+        </button>
+      </div>
+    </div>
+ 
+    <div *ngFor="let item of comentarios">
+      <ng-container *ngIf="+item.idImagem === imagem.Id">
+        <div style="display: flex; justify-content: left; margin-bottom: 10px;">
+          <button color="primary" mat-button (click)="OpenDialogPostComments(imagem.Id)">Comentar
+            <mat-icon>add_comment</mat-icon>
+          </button>
+          <button [ngStyle]="{'color':'#FC8F01FF', 'margin-left':'10px'}" mat-button (click)="toggleComments(imagem.Id)">
+            <mat-icon>{{ imagem.Id === imagemSelecionadaId ? 'speaker_notes_off' : 'mark_chat_unread' }}</mat-icon>
+            {{ imagem.Id === imagemSelecionadaId ? 'Ocultar ' + (item.comentarios.length === 1 ? '1 Comentário' : item.comentarios.length + ' Comentários') : 'Ver ' + (item.comentarios.length === 1 ? '1 Comentário' : item.comentarios.length + ' Comentários') }}
+          </button>
+        </div>
+        <div *ngIf="item.comentarios && item.comentarios.length > 0 && imagem.Id === imagemSelecionadaId">
+          <div *ngFor="let comentario of item.comentarios">
+            <div class="post-info" style="display: flex; justify-content: space-between;">
+              <div style="display: flex; align-items: center;">
+                <span><mat-icon class="avatar">account_circle</mat-icon></span>
+                <span class="nomeUsuarioTop">
+                  {{ comentario.nomeUsuarioComentario }}
+                  {{ comentario.dataCriacao }}
+                </span>
+              </div>
+              <div>
+                <button mat-icon-button color="warn" (click)="OpenDialogDeleteComments(comentario.id, comentario.idUsuario)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button [ngStyle]="{'color':'#FC8F01FF'}" (click)="OpenDialogUpdateComments(comentario.id, comentario.idUsuario)"><mat-icon>edit</mat-icon></button>
+              </div>
+            </div>
+            <p class="comentario-text">{{ comentario.comentario }}</p>
+            <span class="excluir-comentario"> </span>
+            <hr>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </mat-card>
+
+  <!-- Certifique-se de adicionar a linha abaixo se quiser manter o roteamento -->
+  <router-outlet></router-outlet>
+</div>

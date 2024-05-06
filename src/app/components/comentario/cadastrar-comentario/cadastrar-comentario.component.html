@@ -1,0 +1,16 @@
+<mat-card class="custom-card">
+    <div class="modal-buttons">
+      <form [formGroup]="comentarioForm" (ngSubmit)="submitComentario()">
+        <mat-form-field class="comment-field" style="width: 400px">
+          <textarea formControlName="comentario" matInput placeholder="Escreva o seu comentário..." rows="3"></textarea>
+          <mat-error *ngIf="comentarioForm.get('comentario')?.invalid">Comentário é obrigatório</mat-error>
+          <mat-label>Comentário</mat-label>
+        </mat-form-field>
+        <div class="button-container">
+          <button class="buttonEditModal editButton" mat-raised-button color="primary">Cadastrar</button>
+          <button type="button" class="buttonEditModal"mat-raised-button (click)="Cancelar()">Voltar</button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+  

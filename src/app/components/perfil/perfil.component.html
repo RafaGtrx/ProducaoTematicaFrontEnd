@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="register-container">
+      <mat-card class="register-card">
+        <h1>Dados Cadastrais</h1>
+        <mat-card-content>
+          <form *ngIf="usuarioForm" [formGroup]="usuarioForm" (ngSubmit)="EditPerfilUser()" class="form-container">
+  
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Nome</mat-label>
+              <input matInput formControlName="nome">
+              <mat-icon [ngStyle]="{'color':'#FC8F01FF'}" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="usuarioForm.get('nome')?.invalid">Nome é obrigatório</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>E-mail</mat-label>
+              <input matInput formControlName="email">
+              <mat-icon [ngStyle]="{'color':'#FC8F01FF'}" matSuffix>mail</mat-icon>
+              <mat-error *ngIf="usuarioForm.get('email')?.invalid">Email inválido</mat-error>
+            </mat-form-field>
+  
+            <mat-checkbox color="primary" formControlName="atualizarSenha">Deseja alterar a senha?</mat-checkbox>
+  
+            <div *ngIf="usuarioForm.get('atualizarSenha')?.value" class="form-field">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Senha</mat-label>
+                <input matInput formControlName="senha" type="password">
+                <mat-icon [ngStyle]="{'color':'#FC8F01FF'}" matSuffix>lock</mat-icon>
+                <mat-error *ngIf="usuarioForm.get('senha')?.invalid">Senha é obrigatória</mat-error>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Confirme a Senha</mat-label>
+                <input matInput placeholder="Confirme a sua senha" type="password" formControlName="confirmaSenha" (input)="checkConfirmPassword()">
+                <mat-icon [ngStyle]="{'color':'#FC8F01FF'}" matSuffix>lock</mat-icon>
+                <mat-error *ngIf="usuarioForm.get('confirmaSenha')?.invalid && !usuarioForm.get('confirmaSenha')?.hasError('passwordMismatch')">Confirme a senha</mat-error>
+                <mat-error *ngIf="usuarioForm.get('confirmaSenha')?.touched && usuarioForm.get('confirmaSenha')?.value !== usuarioForm.get('senha')?.value">As senhas não coincidem</mat-error>
+              </mat-form-field>
+            </div>
+  
+            <div class="button-container">
+                <button mat-raised-button color="primary" class="register-button"
+                    [disabled]="!usuarioForm.get('nome')?.valid || !usuarioForm.get('email')?.valid || (usuarioForm.get('atualizarSenha')?.value && (!usuarioForm.get('senha')?.valid || !usuarioForm.get('confirmaSenha')?.valid || usuarioForm.get('confirmaSenha')?.value !== usuarioForm.get('senha')?.value))">Atualizar Dados</button>
+            </div>
+            
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>

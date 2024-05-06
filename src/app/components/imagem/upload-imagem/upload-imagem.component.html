@@ -1,0 +1,47 @@
+<div class="container">
+  <mat-card class="card">
+    <h3></h3>
+    <mat-card-content>
+      <!-- Formulário para upload de imagem e informações -->
+      <form #uploadForm="ngForm" (ngSubmit)="submitForm(uploadForm)"class="form">
+        <!-- Input para selecionar a imagem -->
+        <div class="form-group">
+          <input class="form-control form-control-lg" id="fileInput"type="file" (change)="onFileSelected($event)" accept="image/*" required/>
+        </div>
+
+        <!-- Input para a descrição da imagem -->
+        <div class="form-group description">
+          <mat-form-field class="comment-field" style="width: 400px">
+            <textarea matInput name="descricaoImagem" 
+              placeholder="Escreva a legenda da foto..."
+              [(ngModel)]="formData.descricaoImagem"
+              rows="8"
+              required
+            ></textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- Botão de envio -->
+        <div class="button-container">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="uploadForm.invalid"
+          >
+            Enviar
+          </button>
+          <button
+            class="buttonEditModal"
+            mat-raised-button
+            (click)="Cancelar()"
+          >
+            Voltar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+

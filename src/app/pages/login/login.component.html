@@ -14,14 +14,15 @@
             <input matInput placeholder="Digite a sua senha" type="password" name="senha" [(ngModel)]="senha" required>
           </mat-form-field>
           <div class="button-container">
-            <button mat-raised-button class="signup-button" id="signup-button" routerLink="/cadastro">
-              Cadastrar
-              <mat-icon>person</mat-icon>
-            </button>
+           
             <button mat-raised-button [color]="loginForm.valid ? 'primary' : ''" class="login-button" [disabled]="!loginForm.valid || !isEmailValid(email)">
               Entrar
               <mat-icon *ngIf="!loginForm.valid">lock</mat-icon>
               <mat-icon *ngIf="loginForm.valid">lock_open</mat-icon>
+            </button>
+            <button mat-raised-button class="signup-button" id="signup-button" routerLink="/cadastro">
+              Cadastrar
+              <mat-icon>person</mat-icon>
             </button>
           </div>
         </form>

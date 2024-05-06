@@ -3,6 +3,7 @@ import { Usuario } from 'src/app/models/usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-cadastro',
@@ -14,6 +15,7 @@ export class CadastroComponent {
 
   constructor(private formBuilder: FormBuilder, 
     private usuarioService: UsuarioService,
+    private spinner: NgxSpinnerService,
     private authService: AuthService) {
     this.registerForm = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -25,6 +27,7 @@ export class CadastroComponent {
 
   createUsuario() {
     if (this.registerForm.valid) {
+        this.spinner.show()
         const nome = this.registerForm.get('nome');
         const email = this.registerForm.get('email');
         const senha = this.registerForm.get('senha');
@@ -44,6 +47,10 @@ export class CadastroComponent {
                 // Redirecionar ou fazer alguma outra ação após o login automático
               }
             });
+          } else {
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
           }
         });
       }
@@ -67,6 +74,6 @@ export class CadastroComponent {
   }
 
   isEmailValid(email: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(email);
   }
 }

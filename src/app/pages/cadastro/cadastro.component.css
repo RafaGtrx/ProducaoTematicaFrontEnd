@@ -17,3 +17,9 @@
     width: 100%;
     margin-top: 20px;
   }
+
+  h1{
+    text-align: center !important;
+    color: #3f51b5;
+    font-family:sans-serif, Helvetica;
+  }

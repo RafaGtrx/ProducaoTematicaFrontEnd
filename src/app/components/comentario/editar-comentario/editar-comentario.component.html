@@ -1,0 +1,18 @@
+<div *ngFor="let item of comentarioEditar">
+    <mat-card class="custom-card">
+      <div class="modal-buttons">
+        <mat-form-field class="comment-field" style="width: 400px">
+            <textarea #textAreaNovo2
+            matInput
+            placeholder="Edite o comentário..."
+            [value]="item?.comentario" 
+            rows="3"
+          ></textarea>
+        </mat-form-field>
+        <div class="button-container">
+          <button class="buttonEditModal editButton" mat-raised-button color="warn" (click)="EditarImagemComentario()">Editar</button>
+          <button class="buttonEditModal" mat-raised-button (click)="Cancelar()">Voltar</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
